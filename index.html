@@ -3,34 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShortsX - API Downloader</title>
+<title>ShortsX Pro - Instant Shorts Downloader</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+:root{
+  --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
+  --card:rgba(255,255,255,0.06); --border:rgba(255,255,255,0.1);
+  --red:#FF0000; --green:#22c55e;
+}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:linear-gradient(135deg,#1a1a2e,#16213e);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:#fff}
-.card{background:rgba(255,255,255,0.05);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px 30px;width:100%;max-width:500px;box-shadow:0 8px 32px 0 rgba(0,0,0,0.3)}
-.logo{font-size:32px;font-weight:700;text-align:center;margin-bottom:10px}
-.logo span{color:#FF0000}
-.subtitle{text-align:center;color:#aaa;font-size:14px;margin-bottom:30px}
-input{width:100%;padding:16px 20px;background:rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:15px;outline:none;margin-bottom:20px}
-.btn{width:100%;padding:16px;background:linear-gradient(90deg,#FF0000,#ff4d4d);border:none;border-radius:12px;color:#fff;font-size:17px;font-weight:600;cursor:pointer}
-.btn:disabled{opacity:0.6}
-#result{margin-top:20px;text-align:center}
-#result a{display:inline-block;padding:12px 20px;background:#28a745;color:#fff;text-decoration:none;border-radius:8px;margin-top:10px}
-.loader{display:none;text-align:center}
+body{background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:#fff}
+.container{width:100%;max-width:550px}
+.header{text-align:center;margin-bottom:30px}
+.header h1{font-size:36px;font-weight:700}
+.header h1 span{color:var(--red)}
+.header p{color:#aaa;font-size:14px;margin-top:5px}
+
+.card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:35px 30px;box-shadow:0 10px 40px rgba(0,0,0,0.4)}
+.input-group{position:relative;margin-bottom:20px}
+.input-group i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#888}
+.input-group input{width:100%;padding:18px 18px 18px 50px;background:rgba(0,0,0,0.3);border:2px solid var(--border);border-radius:14px;color:#fff;font-size:15px;outline:none;transition:0.3s}
+.input-group input:focus{border-color:var(--red)}
+
+.btn{width:100%;padding:18px;background:linear-gradient(90deg,var(--red),#ff4d4d);border:none;border-radius:14px;color:#fff;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:0.3s}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,0,0,0.4)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+.loader,.result{display:none;margin-top:20px;text-align:center}
+.loader i{font-size:24px;color:var(--red);animation:spin 1s linear infinite}
+@keyframes spin{100%{transform:rotate(360deg)}}
+.result-box{background:rgba(34,197,94,0.1);border:1px solid var(--green);border-radius:12px;padding:15px}
+.result-box a{display:inline-block;margin-top:10px;padding:12px 25px;background:var(--green);color:#fff;text-decoration:none;border-radius:10px;font-weight:600}
+.result-box a:hover{opacity:0.9}
+.error{color:#ff4d4d}
+
+.features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}
+.feature{background:rgba(0,0,0,0.2);padding:12px;border-radius:10px;font-size:12px;text-align:center}
+.feature i{color:var(--red);margin-bottom:5px}
+.footer{text-align:center;margin-top:25px;font-size:12px;color:#666}
 </style>
 </head>
 <body>
-<div class="card">
-<div class="logo">Shorts<span>X</span></div>
-<p class="subtitle">No Backend Needed - API Powered</p>
+<div class="container">
+  <div class="header">
+    <h1>Shorts<span>X</span> Pro</h1>
+    <p>Fastest Youtube Shorts Downloader - No Watermark</p>
+  </div>
 
-<input type="text" id="url" placeholder="Paste Youtube Shorts Link Here...">
-<button class="btn" id="btn" onclick="download()">⬇️ Get Download Link</button>
+  <div class="card">
+    <div class="input-group">
+      <i class="fa-brands fa-youtube"></i>
+      <input type="text" id="url" placeholder="Paste Shorts URL here...">
+    </div>
 
-<div class="loader" id="loader"><p>Processing...</p></div>
-<div id="result"></div>
+    <button class="btn" id="btn" onclick="download()">
+      <i class="fa-solid fa-download"></i> Download Now
+    </button>
 
+    <div class="loader" id="loader">
+      <i class="fa-solid fa-spinner"></i>
+      <p>Fetching Video...</p>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="features">
+      <div class="feature"><i class="fa-solid fa-bolt"></i><br>Super Fast</div>
+      <div class="feature"><i class="fa-solid fa-mobile"></i><br>Mobile Friendly</div>
+      <div class="feature"><i class="fa-solid fa-shield"></i><br>100% Safe</div>
+      <div class="feature"><i class="fa-solid fa-infinity"></i><br>Unlimited</div>
+    </div>
+  </div>
+  <p class="footer">© 2026 ShortsX Pro | For Personal Use</p>
 </div>
 
 <script>
@@ -41,28 +86,37 @@ async function download(){
   let result = document.getElementById('result');
   
   if(url=='' || !url.includes('shorts')){
-    result.innerHTML = '<p style="color:red">❌ সঠিক Shorts Link দাও</p>';
+    result.style.display='block';
+    result.innerHTML = '<p class="error">❌ Valid Shorts Link Paste করো</p>';
     return;
   }
   
   btn.disabled = true;
   loader.style.display = 'block';
-  result.innerHTML = '';
+  result.style.display = 'none';
   
   try {
-    // এখানে ফ্রি API ব্যবহার করছি
-    let apiURL = `https://api.vevioz.com/api/button?url=${encodeURIComponent(url)}`;
-    let res = await fetch(apiURL);
+    let res = await fetch("https://api.cobalt.tools/api/json", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({url: url, vQuality: "720", aFormat: "mp3"})
+    });
+    
     let data = await res.json();
     
-    if(data.status == 'success'){
-      let downloadLink = data.links.mp4[0].url; // 720p link
-      result.innerHTML = `<p style="color:#0f0">✅ Ready</p><a href="${downloadLink}" target="_blank">Download MP4</a>`;
+    if(data.status == 'success' && data.url){
+      result.style.display='block';
+      result.innerHTML = `
+      <div class="result-box">
+        <p>✅ Video Ready!</p>
+        <a href="${data.url}" target="_blank"><i class="fa-solid fa-download"></i> Download MP4 720p</a>
+      </div>`;
     } else {
-      result.innerHTML = '<p style="color:red">❌ Video পাওয়া যায়নি। Link চেক করো</p>';
+      throw new Error(data.text || "Video not found");
     }
   } catch(e){
-    result.innerHTML = '<p style="color:red">❌ API Error. পরে Try করো</p>';
+    result.style.display='block';
+    result.innerHTML = `<p class="error">❌ Error: ${e.message}</p>`;
   }
   
   btn.disabled = false;
@@ -70,4 +124,4 @@ async function download(){
 }
 </script>
 </body>
-  </html>
+</html>
