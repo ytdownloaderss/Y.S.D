@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShortsX - API Downloader</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:linear-gradient(135deg,#1a1a2e,#16213e);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:#fff}
+.card{background:rgba(255,255,255,0.05);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px 30px;width:100%;max-width:500px;box-shadow:0 8px 32px 0 rgba(0,0,0,0.3)}
+.logo{font-size:32px;font-weight:700;text-align:center;margin-bottom:10px}
+.logo span{color:#FF0000}
+.subtitle{text-align:center;color:#aaa;font-size:14px;margin-bottom:30px}
+input{width:100%;padding:16px 20px;background:rgba(0,0,0,0.3);border:2px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:15px;outline:none;margin-bottom:20px}
+.btn{width:100%;padding:16px;background:linear-gradient(90deg,#FF0000,#ff4d4d);border:none;border-radius:12px;color:#fff;font-size:17px;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:0.6}
+#result{margin-top:20px;text-align:center}
+#result a{display:inline-block;padding:12px 20px;background:#28a745;color:#fff;text-decoration:none;border-radius:8px;margin-top:10px}
+.loader{display:none;text-align:center}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="logo">Shorts<span>X</span></div>
+<p class="subtitle">No Backend Needed - API Powered</p>
+
+<input type="text" id="url" placeholder="Paste Youtube Shorts Link Here...">
+<button class="btn" id="btn" onclick="download()">⬇️ Get Download Link</button>
+
+<div class="loader" id="loader"><p>Processing...</p></div>
+<div id="result"></div>
+
+</div>
+
+<script>
+async function download(){
+  let url = document.getElementById('url').value;
+  let btn = document.getElementById('btn');
+  let loader = document.getElementById('loader');
+  let result = document.getElementById('result');
+  
+  if(url=='' || !url.includes('shorts')){
+    result.innerHTML = '<p style="color:red">❌ সঠিক Shorts Link দাও</p>';
+    return;
+  }
+  
+  btn.disabled = true;
+  loader.style.display = 'block';
+  result.innerHTML = '';
+  
+  try {
+    // এখানে ফ্রি API ব্যবহার করছি
+    let apiURL = `https://api.vevioz.com/api/button?url=${encodeURIComponent(url)}`;
+    let res = await fetch(apiURL);
+    let data = await res.json();
+    
+    if(data.status == 'success'){
+      let downloadLink = data.links.mp4[0].url; // 720p link
+      result.innerHTML = `<p style="color:#0f0">✅ Ready</p><a href="${downloadLink}" target="_blank">Download MP4</a>`;
+    } else {
+      result.innerHTML = '<p style="color:red">❌ Video পাওয়া যায়নি। Link চেক করো</p>';
+    }
+  } catch(e){
+    result.innerHTML = '<p style="color:red">❌ API Error. পরে Try করো</p>';
+  }
+  
+  btn.disabled = false;
+  loader.style.display = 'none';
+}
+</script>
+</body>
+  </html>
