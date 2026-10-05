@@ -122,6 +122,54 @@ async function download(){
   btn.disabled = false;
   loader.style.display = 'none';
 }
+</script> <script>
+async function download(){
+  let url = document.getElementById('url').value;
+  let btn = document.getElementById('btn');
+  let loader = document.getElementById('loader');
+  let result = document.getElementById('result');
+  
+  if(url=='' || !url.includes('shorts')){
+    result.style.display='block';
+    result.innerHTML = '<p class="error">❌ Valid Shorts Link Paste করো</p>';
+    return;
+  }
+  
+  btn.disabled = true;
+  loader.style.display = 'block';
+  result.style.display = 'none';
+  
+  try {
+    // Proxy দিয়ে Cobalt API Call
+    let cobaltBody = JSON.stringify({url: url, vQuality: "720"});
+    let proxyURL = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://api.cobalt.tools/api/json")}`;
+    
+    let res = await fetch(proxyURL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: cobaltBody
+    });
+    
+    let data = await res.json();
+    
+    if(data.status == 'success' && data.url){
+      result.style.display='block';
+      result.innerHTML = `
+      <div class="result-box">
+        <p>✅ Video Ready!</p>
+        <a href="${data.url}" target="_blank"><i class="fa-solid fa-download"></i> Download MP4 720p</a>
+      </div>`;
+    } else {
+      throw new Error(data.text || "Video not found");
+    }
+  } catch(e){
+    result.style.display='block';
+    result.innerHTML = `<p class="error">❌ Error: ${e.message}. Link চেক করো</p>`;
+  }
+  
+  btn.disabled = false;
+  loader.style.display = 'none';
+}
 </script>
 </body>
 </html>
