@@ -144,11 +144,11 @@ async function download(){
     let cobaltBody = JSON.stringify({url: url, vQuality: "720"});
     let proxyURL = `https://api.allorigins.win/raw?url=${encodeURIComponent("https://api.cobalt.tools/api/json")}`;
     
-    let res = await fetch(proxyURL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: cobaltBody
-    });
+    let res = await fetch("https://shortsx-api.username.repl.co/api/download", {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({url: url})
+});
     
     let data = await res.json();
     
